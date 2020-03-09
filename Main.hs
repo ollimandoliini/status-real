@@ -17,6 +17,7 @@ main = do
     port <- fmap (maybe 3000 read) (lookupEnv "PORT")
     file <- dataFile
     fileContent <- readFile file
+    print fileContent
     let pkgs = mapMaybe parsePackageInfo $ T.splitOn "\n\n" $ T.pack fileContent
     scotty port $ do
         get "/package/:packageName" $ do

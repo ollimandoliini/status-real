@@ -27,4 +27,4 @@ executable status
     , scotty ==0.11.5
     , text ==1.2.4.0
     , directory == 1.3.4.0
-    , http-conduit == 2.3.7.3
+    -- , http-conduit == 2.3.7.3
