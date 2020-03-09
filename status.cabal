@@ -3,10 +3,26 @@ version:       0.0.0
 cabal-version: >= 1.8
 build-type:    Simple
 
-executable          status
-    hs-source-dirs: .
-    main-is:        Main.hs
-    ghc-options:    -Wall -threaded -O2 -rtsopts -with-rtsopts=-N
-    extensions:     OverloadedStrings
-    build-depends:  base   >= 4      && < 5
-                  , scotty
+library
+  exposed-modules:
+      Parser
+      Views
+  other-modules:
+      Paths_status
+  build-depends:
+      base >=4.7 && <5
+    , scotty ==0.11.5
+    , text ==1.2.4.0
+
+executable status
+  main-is: Main.hs
+  other-modules:
+      Paths_status
+      Parser
+      Views
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , status
+    , scotty ==0.11.5
+    , text ==1.2.4.0
