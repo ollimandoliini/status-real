@@ -34,7 +34,7 @@ main = do
 dataFile :: IO String
 dataFile = do
   fileExists <- doesFileExist "/var/lib/dpkg/status.real"
-  if fileExists then return "/var/lib/dpkg/status.real" else return "app/data/status.real"
+  if fileExists then return "/var/lib/dpkg/status.real" else return "/app/data/status.real"
 
 
 -- fff = do
