@@ -17,8 +17,12 @@ main = do
     fileContent <- readFile "data/status.real"
     let pkgs = mapMaybe parsePackageInfo $ T.splitOn "\n\n" $ T.pack fileContent
     scotty port $ do
-      get "/moro" $ html "moro"
-      get "/" $ html "muut"
+        get "/package/:packageName" $ do
+            packageName <- param "packageName"
+            html  packageName
+        get "/" $
+            html "root"
+
 
     -- scotty port $ do
     --     get "/package/:packageName" $ do
