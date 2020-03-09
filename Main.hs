@@ -7,6 +7,7 @@ import Web.Scotty
 import Data.Maybe
 import Data.List (find)
 import System.Environment (lookupEnv)
+import System.Directory (doesFileExist)
 
 import Parser (PackageInfo(..), parsePackageInfo)
 import Views
@@ -14,23 +15,24 @@ import Views
 main :: IO ()
 main = do
     port <- fmap (maybe 3000 read) (lookupEnv "PORT")
-    fileContent <- readFile "data/status.real"
+    file <- dataFile
+    fileContent <- readFile file
     let pkgs = mapMaybe parsePackageInfo $ T.splitOn "\n\n" $ T.pack fileContent
     scotty port $ do
         get "/package/:packageName" $ do
             packageName <- param "packageName"
-            html  packageName
+            case findPackage packageName pkgs of
+                Just pkg -> html $ packageInfoView pkgs pkg
+                Nothing -> html $ notFoundView packageName
         get "/" $
-            html "root"
-
-
-    -- scotty port $ do
-    --     get "/package/:packageName" $ do
-    --         packageName <- param "packageName"
-    --         case findPackage packageName pkgs of
-    --             Just pkg -> html $ packageInfoView pkgs pkg
-    --             Nothing -> html $ notFoundView packageName
-    --     get "/" $
-    --         html $ packageListView pkgs
+            html $ packageListView pkgs
     where
         findPackage packageName = find (\x -> name x == packageName)
+        -- dataFile = if doesFileExist "/var/lib/dpkg/status.real" then "/var/lib/dpkg/status.real" else "data/status.real"  
+
+
+dataFile :: IO String
+dataFile = do
+  fileExists <- doesFileExist "/var/lib/dpkg/status.real"
+  if fileExists then return "/var/lib/dpkg/status.real" else return "./data/status.real"
+
